@@ -1,0 +1,136 @@
+﻿<Window x:Class="IceCreamOrderForm.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IceCreamOrderForm"
+        xmlns:vm="clr-namespace:IceCreamOrderForm"
+        mc:Ignorable="d"
+        Title="Let's have Ice Cream" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource WindowStyle}"
+        Icon="/ice_cream.png">
+
+    <Window.DataContext>
+        <vm:MainWindowViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <local:RadioButtonConverter x:Key="RadioButtonConverter"  />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.6*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.2*"/>
+        </Grid.ColumnDefinitions>
+        <Image Grid.Row="0"
+               Grid.Column="1"
+               Style="{StaticResource ImageStyle}"
+               Source="/ice_cream.png"/>
+        <TextBlock Grid.ColumnSpan="8"
+                   Style="{StaticResource LabelHeaderStyle}">Create your favorite Ice Cream!</TextBlock>
+        <TextBlock Grid.Row="1"
+                   Style="{StaticResource Label1Style}">Select a Size:</TextBlock>
+        <RadioButton Grid.Column="1" 
+                     Grid.Row="1"
+                     Style="{StaticResource rbSize}"
+                     Content="Small"
+                     IsChecked="{Binding SelectedSize, ConverterParameter=1, Converter={StaticResource RadioButtonConverter}, Mode=TwoWay}"/>
+        <RadioButton Grid.Column="2" 
+                     Grid.Row="1"
+                     Style="{StaticResource rbSize}"
+                     Content="Medium" 
+                     IsChecked="{Binding SelectedSize, ConverterParameter=2, Converter={StaticResource RadioButtonConverter}, Mode=TwoWay}"/>
+        <RadioButton Grid.Column="3" 
+                     Grid.Row="1"
+                     Style="{StaticResource rbSize}"
+                     Content="Large"
+                     IsChecked="{Binding SelectedSize, ConverterParameter=3, Converter={StaticResource RadioButtonConverter}, Mode=TwoWay}"/>
+        <RadioButton Grid.Column="4" 
+                     Grid.Row="1"
+                     Style="{StaticResource rbSize}"
+                     Content="Xtra Large"
+                     IsChecked="{Binding SelectedSize, ConverterParameter=4, Converter={StaticResource RadioButtonConverter}, Mode=TwoWay}"/>
+        <TextBlock Grid.Row="2"
+                   Style="{StaticResource Label1Style}">Select a Flavor:</TextBlock>
+        <ComboBox Grid.Row="2" 
+                  Grid.Column="1" 
+                  Grid.ColumnSpan="2" 
+                  Style="{StaticResource ComboBoxStyle}"
+                  ItemsSource="{Binding FlavorList}" SelectedItem="{Binding SelectedFlavor}" SelectedValuePath="Id" DisplayMemberPath="FlavorName">
+        </ComboBox>
+        <TextBlock Grid.Row="3"
+                   Style="{StaticResource Label1Style}">Select a Mix-in:</TextBlock>
+        <ComboBox Grid.Row="3" 
+                  Grid.Column="1" 
+                  Grid.ColumnSpan="2" 
+                  Style="{StaticResource ComboBoxStyle}"
+                  ItemsSource="{Binding MixInList}" SelectedItem="{Binding SelectedMixIn}" SelectedValuePath="Id" DisplayMemberPath="MixinName">
+        </ComboBox>
+        <TextBlock Grid.Row="4"
+                   Style="{StaticResource Label1Style}">Select a Topping:</TextBlock>
+        <ComboBox Grid.Row="4" 
+                  Grid.Column="1" 
+                  Grid.ColumnSpan="2" 
+                  Style="{StaticResource ComboBoxStyle}"
+                  ItemsSource="{Binding ToppingsList}" SelectedItem="{Binding SelectedTopping}" SelectedValuePath="Id" DisplayMemberPath="ToppingName">
+        </ComboBox>
+        <TextBlock Grid.Row="5"
+                   Style="{StaticResource Label1Style}">Select a Cone or Bowl:</TextBlock>
+        <ComboBox Grid.Row="5" 
+                  Grid.Column="1" 
+                  Grid.ColumnSpan="2" 
+                  Style="{StaticResource ComboBoxStyle}"
+                  ItemsSource="{Binding ServBowlList}" SelectedItem="{Binding SelectedBowls}" SelectedValuePath="Id" DisplayMemberPath="BowlName">
+        </ComboBox>
+        <StackPanel Grid.Row="2"
+                    Grid.Column="3"
+                    Grid.RowSpan="5"
+                    Grid.ColumnSpan="2"
+                    Orientation="Vertical"
+                    Style="{StaticResource StackpanelStyle}">
+            <TextBlock Style="{StaticResource LabelHeaderStyle}">
+                My Order
+            </TextBlock>
+            <TextBlock Style="{StaticResource Label2Style}"
+                       Text="{Binding SizeName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBlock>
+            <TextBlock Style="{StaticResource Label2Style}"
+                       Text="{Binding SelectedFlavor.FlavorName, StringFormat=' {0} ice cream', UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBlock>
+            
+            <TextBlock Style="{StaticResource Label2Style}"
+                       Text="{Binding SelectedMixIn.MixinName, StringFormat=' {0} mix-in', UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBlock>
+            <TextBlock Style="{StaticResource Label2Style}"
+                       Text="{Binding SelectedTopping.ToppingName, StringFormat=' {0} Topping', UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBlock>
+            <TextBlock Style="{StaticResource Label2Style}"
+                       Text="{Binding SelectedBowls.BowlName, StringFormat='In a {0}', UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBlock>
+        </StackPanel>
+        
+        <!--Button Control-->
+        <Button Grid.Row="7"
+                Grid.Column="1" Grid.ColumnSpan="2"
+                Template="{StaticResource ButtonTemplate}"
+                Command="{Binding OrderCommand}">
+            Add to Order
+        </Button>
+        <Button Grid.Row="7"
+                Grid.Column="3" Grid.ColumnSpan="2"
+                Template="{StaticResource ButtonTemplate}"
+                Command="{Binding CheckoutCommand}"
+                IsEnabled="{Binding OrderAdded}">
+            Checkout
+        </Button>
+    </Grid>
+</Window>
